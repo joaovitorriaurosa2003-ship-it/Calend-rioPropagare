@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#185FA5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Propagare">
+<title>Propagare — Projetos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.3.0/fonts/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --c1:#185FA5;--c1l:#E6F1FB;--c1t:#0C447C;
+  --cs:#1D9E75;--csl:#E1F5EE;--cst:#085041;
+  --cw:#BA7517;--cwl:#FAEEDA;--cwt:#633806;
+  --cd:#A32D2D;--cdl:#FCEBEB;--cdt:#501313;
+  --cp:#533AB7;--cpl:#EEEDFE;--cpt:#26215C;
+  --bg:#F5F5F5;--surface:#fff;--surface2:#F8F8F8;
+  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
+  --text:#1A1A1A;--text2:#666;--text3:#999;
+  --radius:10px;--radius-lg:14px;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#111;--surface:#1C1C1E;--surface2:#2C2C2E;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);--text:#F2F2F7;--text2:#AEAEB2;--text3:#636366}
+  .badge-pending{background:#3D2800;color:#FAC775}
+  .badge-progress{background:#042C53;color:#85B7EB}
+  .badge-done{background:#04342C;color:#5DCAA5}
+  .badge-late{background:#2D0A0A;color:#F09595}
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+.topbar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:env(safe-area-inset-top,12px) 16px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{font-size:16px;font-weight:600;color:var(--c1)}
+.logo span{font-weight:400;font-size:13px;color:var(--text2);margin-left:4px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);display:inline-block;margin-left:6px;vertical-align:middle;transition:background .3s}
+.sync-dot.ok{background:var(--cs)}
+.sync-dot.err{background:var(--cd)}
+.sync-dot.loading{background:var(--cw);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tabs{display:flex;background:var(--surface);border-bottom:0.5px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:10px 4px 8px;text-align:center;font-size:11px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;user-select:none}
+.tab i{font-size:20px}
+.tab.active{color:var(--c1);border-bottom-color:var(--c1)}
+.content{flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:14px 16px;margin-bottom:12px}
+.sec-title{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.6px}
+button{font-family:'Inter',sans-serif;cursor:pointer}
+.btn-primary{background:var(--c1);color:#fff;border:none;border-radius:var(--radius);padding:11px 18px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s}
+.btn-primary:active{opacity:.85}
+.btn-ghost{background:transparent;border:0.5px solid var(--border2);border-radius:var(--radius);padding:9px 14px;font-size:13px;font-weight:500;color:var(--text);display:inline-flex;align-items:center;gap:6px;transition:background .15s}
+.btn-ghost:active{background:var(--surface2)}
+.btn-google{background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:9px 14px;font-size:13px;font-weight:500;color:var(--text);display:inline-flex;align-items:center;gap:8px;text-decoration:none;width:100%;justify-content:center;transition:background .15s;cursor:pointer}
+.btn-google:active{background:var(--surface2)}
+input,select,textarea{width:100%;border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);margin-bottom:10px;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--c1);outline-offset:-1px}
+textarea{resize:vertical;min-height:64px}
+label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:5px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-pending{background:var(--cwl);color:var(--cwt)}
+.badge-progress{background:var(--c1l);color:var(--c1t)}
+.badge-done{background:var(--csl);color:var(--cst)}
+.badge-late{background:var(--cdl);color:var(--cdt)}
+.row{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:0.5px solid var(--border)}
+.row:last-child{border-bottom:none;padding-bottom:0}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.row-info{flex:1;min-width:0}
+.row-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.row-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.icon-btn{background:none;border:none;color:var(--text2);padding:6px;border-radius:8px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .15s;cursor:pointer}
+.icon-btn:active{background:var(--surface2)}
+.icon-btn i{font-size:18px}
+.stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border-radius:var(--radius);padding:12px 14px;border:0.5px solid var(--border)}
+.stat-num{font-size:26px;font-weight:600;line-height:1.1}
+.stat-lbl{font-size:12px;color:var(--text2);margin-top:3px}
+.progress-bar{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-top:7px;border:0.5px solid var(--border)}
+.progress-fill{height:100%;background:var(--c1);border-radius:3px;transition:width .4s}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;margin-bottom:4px}
+.cal-hdr{font-size:11px;font-weight:600;color:var(--text3);text-align:center;padding:5px 0}
+.cal-day{min-height:38px;display:flex;flex-direction:column;align-items:center;padding:4px 2px 3px;border-radius:8px;cursor:pointer;transition:background .15s;user-select:none}
+.cal-day:active{background:var(--surface2)}
+.cal-day-num{font-size:13px;font-weight:500;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cal-day.today .cal-day-num{background:var(--c1);color:#fff}
+.cal-day.other-month .cal-day-num{color:var(--text3)}
+.cal-dots{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;justify-content:center;max-width:28px}
+.cal-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav-title{font-size:16px;font-weight:600}
+.filter-row{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
+.filter-btn{padding:6px 14px;border:0.5px solid var(--border2);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);white-space:nowrap;font-family:'Inter',sans-serif;transition:all .15s}
+.filter-btn.on{background:var(--c1);color:#fff;border-color:var(--c1)}
+.ev-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border)}
+.ev-row:last-child{border-bottom:none;padding-bottom:0}
+.ev-bar{width:4px;border-radius:2px;align-self:stretch;min-height:28px;flex-shrink:0}
+.ev-info{flex:1;min-width:0}
+.ev-title{font-size:14px;font-weight:500}
+.ev-time{font-size:12px;color:var(--text2);margin-top:2px}
+.ev-desc{font-size:12px;color:var(--text2);margin-top:2px}
+.color-pick{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.color-opt{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;flex-shrink:0;transition:transform .15s}
+.color-opt:active{transform:scale(1.15)}
+.color-opt.sel{border-color:var(--text)}
+.sub-title{font-size:12px;font-weight:600;color:var(--text2);padding:8px 0 4px;border-bottom:0.5px solid var(--border);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.link-chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface2);border:0.5px solid var(--border);border-radius:12px;padding:3px 10px;font-size:11px;font-weight:500;color:var(--c1);text-decoration:none}
+.empty{text-align:center;padding:40px 16px;color:var(--text3)}
+.empty i{font-size:40px;display:block;margin-bottom:10px;opacity:.5}
+.empty p{font-size:14px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px max(env(safe-area-inset-bottom,0px),24px);width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gcal-strip{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.gcal-strip-text{flex:1;font-size:12px;color:var(--text2);line-height:1.4}
+.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:500;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.connecting{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;color:var(--text2);font-size:14px}
+.connecting i{font-size:40px;color:var(--c1);animation:pulse 1.2s infinite}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div>
+      <span class="logo">Propagare <span>Projetos</span></span>
+      <span class="sync-dot loading" id="sync-dot"></span>
+    </div>
+    <button class="btn-primary" id="fab" style="padding:8px 14px;font-size:13px"><i class="ti ti-plus"></i> Novo</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="home"><i class="ti ti-home"></i>Início</div>
+    <div class="tab" data-tab="projects"><i class="ti ti-folder"></i>Projetos</div>
+    <div class="tab" data-tab="deliveries"><i class="ti ti-checklist"></i>Entregas</div>
+    <div class="tab" data-tab="calendar"><i class="ti ti-calendar"></i>Calendário</div>
+  </div>
+  <div class="content" id="content">
+    <div class="connecting"><i class="ti ti-loader-2"></i>Conectando ao banco de dados...</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── Configuração Firebase (Projeto: Propagare) ───────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBBuliyVR-uQrBvro43mU8Fnlp-HLImRWg",
+  authDomain: "propagare-18943.firebaseapp.com",
+  projectId: "propagare-18943",
+  storageBucket: "propagare-18943.firebasestorage.app",
+  messagingSenderId: "218252838077",
+  appId: "1:218252838077:web:a1a13aeb37d556a8fd23d4",
+  measurementId: "G-1PC211P2K3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── Estado ───────────────────────────────────────────────
+const COLORS  = ['#185FA5','#1D9E75','#BA7517','#A32D2D','#533AB7','#636366'];
+const MONTHS  = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const WDAYS   = ['D','S','T','Q','Q','S','S'];
+
+let projects=[], deliveries=[], events=[];
+let tab='home', calDate=new Date(), calFilter='all', selColor='#533AB7';
+
+// ── Sync dot ─────────────────────────────────────────────
+function setSyncDot(state){
+  const d=document.getElementById('sync-dot');
+  if(!d)return;
+  d.className='sync-dot '+state;
+}
+
+// ── Listeners tempo real ─────────────────────────────────
+function startListeners(){
+  onSnapshot(query(collection(db,'projects'),orderBy('createdAt')), snap=>{
+    projects=snap.docs.map(d=>({id:d.id,...d.data()}));
+    setSyncDot('ok'); render();
+  }, ()=>setSyncDot('err'));
+
+  onSnapshot(query(collection(db,'deliveries'),orderBy('createdAt')), snap=>{
+    deliveries=snap.docs.map(d=>({id:d.id,...d.data()}));
+    render();
+  });
+
+  onSnapshot(query(collection(db,'events'),orderBy('createdAt')), snap=>{
+    events=snap.docs.map(d=>({id:d.id,...d.data()}));
+    render();
+  });
+}
+
+// ── Helpers ──────────────────────────────────────────────
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function fmtDate(s){ if(!s)return'—'; const[y,m,d]=s.split('-'); return`${d}/${m}/${y}`; }
+
+function todayKey(){
+  const t=new Date();
+  return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+
+function dotColor(status,dateStr){
+  if(status==='done')return'#1D9E75';
+  if(status==='progress')return'#185FA5';
+  const today=new Date(); today.setHours(0,0,0,0);
+  if(dateStr&&new Date(dateStr+'T00:00:00')<today)return'#A32D2D';
+  return'#BA7517';
+}
+
+function statusBadge(status,dateStr){
+  if(status==='done')return'<span class="badge badge-done"><i class="ti ti-check" style="font-size:10px"></i>Concluída</span>';
+  if(status==='progress')return'<span class="badge badge-progress"><i class="ti ti-loader" style="font-size:10px"></i>Em andamento</span>';
+  const today=new Date(); today.setHours(0,0,0,0);
+  if(dateStr&&new Date(dateStr+'T00:00:00')<today)return'<span class="badge badge-late"><i class="ti ti-alert-circle" style="font-size:10px"></i>Atrasada</span>';
+  return'<span class="badge badge-pending"><i class="ti ti-clock" style="font-size:10px"></i>Pendente</span>';
+}
+
+function gcalLink(ev){
+  const s=(ev.date+'T'+(ev.timeStart||'09:00')+':00').replace(/[-:]/g,'');
+  const e=(ev.date+'T'+(ev.timeEnd||ev.timeStart||'10:00')+':00').replace(/[-:]/g,'');
+  const p=new URLSearchParams({action:'TEMPLATE',text:ev.title,dates:`${s}/${e}`,details:ev.desc||''});
+  return`https://calendar.google.com/calendar/render?${p}`;
+}
+
+// ── Renders ──────────────────────────────────────────────
+function renderHome(){
+  const total=deliveries.length;
+  const done=deliveries.filter(d=>d.status==='done').length;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const late=deliveries.filter(d=>d.status!=='done'&&d.dateExp&&new Date(d.dateExp+'T00:00:00')<today).length;
+  const pct=total>0?Math.round(done/total*100):0;
+  const tk=todayKey();
+  const todayEvs=events.filter(e=>e.date===tk).sort((a,b)=>(a.timeStart||'').localeCompare(b.timeStart||''));
+  const upcoming=deliveries.filter(d=>d.status!=='done'&&d.dateExp).sort((a,b)=>a.dateExp.localeCompare(b.dateExp)).slice(0,4);
+
+  let html=`
+<div class="stat-grid">
+  <div class="stat"><div class="stat-num">${projects.length}</div><div class="stat-lbl">Projetos</div></div>
+  <div class="stat"><div class="stat-num">${total}</div><div class="stat-lbl">Entregas</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--cs)">${done}</div><div class="stat-lbl">Concluídas</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--cd)">${late}</div><div class="stat-lbl">Atrasadas</div></div>
+</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <div class="sec-title" style="margin-bottom:0">Progresso geral</div>
+    <span style="font-size:15px;font-weight:600;color:var(--c1)">${pct}%</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+</div>`;
+
+  if(todayEvs.length) html+=`<div class="card"><div class="sec-title">Hoje</div>${todayEvs.map(e=>`
+<div class="ev-row"><div class="ev-bar" style="background:${e.color||'#533AB7'}"></div>
+<div class="ev-info"><div class="ev-title">${e.title}</div>
+<div class="ev-time">${e.timeStart?e.timeStart+(e.timeEnd?' – '+e.timeEnd:''):''}</div></div>
+<a class="icon-btn" href="${gcalLink(e)}" target="_blank"><i class="ti ti-brand-google" style="color:#4285F4;font-size:16px"></i></a>
+</div>`).join('')}</div>`;
+
+  if(upcoming.length) html+=`<div class="card"><div class="sec-title">Próximas entregas</div>${upcoming.map(d=>{
+    const p=projects.find(x=>x.id===d.projectId);
+    return`<div class="row"><div class="dot" style="background:${dotColor(d.status,d.dateExp)}"></div>
+<div class="row-info"><div class="row-name">${d.name}</div>
+<div class="row-meta">${p?p.name+' · ':''}<i class="ti ti-calendar" style="font-size:11px;vertical-align:-1px"></i> ${fmtDate(d.dateExp)}</div></div>
+${statusBadge(d.status,d.dateExp)}</div>`;}).join('')}</div>`;
+
+  if(!todayEvs.length&&!upcoming.length) html+=`<div class="empty"><i class="ti ti-calendar-off"></i><p>Nenhum evento ou entrega futura</p></div>`;
+  return html;
+}
+
+function renderProjects(){
+  let html=`<button class="btn-ghost" style="width:100%;justify-content:center;margin-bottom:12px" onclick="openModal('project')"><i class="ti ti-plus"></i> Novo projeto</button>`;
+  if(!projects.length) return html+`<div class="empty"><i class="ti ti-folder-open"></i><p>Nenhum projeto criado</p></div>`;
+  html+=`<div class="card">`;
+  projects.forEach(p=>{
+    const dc=deliveries.filter(d=>d.projectId===p.id).length;
+    const dd=deliveries.filter(d=>d.projectId===p.id&&d.status==='done').length;
+    html+=`<div class="row" style="align-items:center">
+<div class="row-info">
+  <div class="row-name">${p.name}</div>
+  ${p.client?`<div class="row-meta">${p.client}</div>`:''}
+  ${p.desc?`<div class="row-meta" style="margin-top:2px">${p.desc}</div>`:''}
+  <div class="row-tags"><span class="badge badge-progress"><i class="ti ti-checklist" style="font-size:10px"></i>${dd}/${dc} entregas</span></div>
+</div>
+<button class="icon-btn" onclick="doDeleteProject('${p.id}')"><i class="ti ti-trash"></i></button>
+</div>`;
+  });
+  return html+'</div>';
+}
+
+function renderDeliveries(){
+  let html=`<button class="btn-ghost" style="width:100%;justify-content:center;margin-bottom:12px" onclick="openModal('delivery')"><i class="ti ti-plus"></i> Nova entrega</button>`;
+  const sorted=[...deliveries].sort((a,b)=>{if(!a.dateExp)return 1;if(!b.dateExp)return-1;return a.dateExp.localeCompare(b.dateExp)});
+  if(!sorted.length) return html+`<div class="empty"><i class="ti ti-checklist"></i><p>Nenhuma entrega cadastrada</p></div>`;
+  html+=`<div class="card">`;
+  sorted.forEach(d=>{
+    const p=projects.find(x=>x.id===d.projectId);
+    html+=`<div class="row">
+<div class="dot" style="background:${dotColor(d.status,d.dateExp)}"></div>
+<div class="row-info">
+  <div class="row-name">${d.name}</div>
+  <div class="row-meta">${p?'<i class="ti ti-folder" style="font-size:11px;vertical-align:-1px"></i> '+p.name+'&nbsp;&nbsp;':''}`+
+  (d.dateExp?`<i class="ti ti-calendar" style="font-size:11px;vertical-align:-1px"></i> ${fmtDate(d.dateExp)}`:'')+(d.dateReal?` → ${fmtDate(d.dateReal)}`:'')+`</div>
+  <div class="row-tags">${statusBadge(d.status,d.dateExp)}${d.link?`<a class="link-chip" href="${d.link}" target="_blank"><i class="ti ti-external-link" style="font-size:10px"></i>Link</a>`:''}</div>
+</div>
+<div style="display:flex;gap:2px;flex-shrink:0">
+  <button class="icon-btn" onclick="doCycleStatus('${d.id}','${d.status}')" title="Mudar status"><i class="ti ti-refresh"></i></button>
+  <button class="icon-btn" onclick="doDeleteDelivery('${d.id}')"><i class="ti ti-trash"></i></button>
+</div></div>`;
+  });
+  return html+'</div>';
+}
+
+function renderCalendar(){
+  const y=calDate.getFullYear(), m=calDate.getMonth();
+  const first=new Date(y,m,1).getDay(), last=new Date(y,m+1,0).getDate();
+  const tk=todayKey();
+  const mKey=`${y}-${String(m+1).padStart(2,'0')}`;
+  const delivMap={}, evMap={};
+  deliveries.forEach(d=>{if(d.dateExp)(delivMap[d.dateExp]=delivMap[d.dateExp]||[]).push(d)});
+  events.forEach(e=>{if(e.date)(evMap[e.date]=evMap[e.date]||[]).push(e)});
+
+  let cells='';
+  for(let i=0;i<first;i++) cells+=`<div class="cal-day other-month"><span class="cal-day-num"></span></div>`;
+  for(let d=1;d<=last;d++){
+    const key=`${mKey}-${String(d).padStart(2,'0')}`;
+    const dList=calFilter!=='events'?(delivMap[key]||[]):[];
+    const eList=calFilter!=='deliveries'?(evMap[key]||[]):[];
+    const dots=[...dList.map(x=>`<div class="cal-dot" style="background:${dotColor(x.status,key)}"></div>`),...eList.map(x=>`<div class="cal-dot" style="background:${x.color||'#533AB7'}"></div>`)].slice(0,4).join('');
+    cells+=`<div class="cal-day${key===tk?' today':''}" onclick="showDay('${key}')"><span class="cal-day-num">${d}</span><div class="cal-dots">${dots}</div></div>`;
+  }
+
+  const mDelivs=deliveries.filter(d=>d.dateExp&&d.dateExp.startsWith(mKey)).sort((a,b)=>a.dateExp.localeCompare(b.dateExp));
+  const mEvents=events.filter(e=>e.date&&e.date.startsWith(mKey)).sort((a,b)=>a.date.localeCompare(b.date)||(a.timeStart||'').localeCompare(b.timeStart||''));
+  const showD=calFilter!=='events', showE=calFilter!=='deliveries';
+
+  let html=`
+<div class="card">
+<div class="cal-nav">
+  <button class="icon-btn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
+  <span class="cal-nav-title">${MONTHS[m]} ${y}</span>
+  <button class="icon-btn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+</div>
+<div class="filter-row">
+  <button class="filter-btn${calFilter==='all'?' on':''}" onclick="setCalFilter('all')">Tudo</button>
+  <button class="filter-btn${calFilter==='deliveries'?' on':''}" onclick="setCalFilter('deliveries')"><i class="ti ti-checklist" style="font-size:12px;vertical-align:-1px"></i> Entregas</button>
+  <button class="filter-btn${calFilter==='events'?' on':''}" onclick="setCalFilter('events')"><i class="ti ti-calendar-event" style="font-size:12px;vertical-align:-1px"></i> Compromissos</button>
+</div>
+<div class="cal-grid">${WDAYS.map(d=>`<div class="cal-hdr">${d}</div>`).join('')}${cells}</div>
+</div>
+<div class="gcal-strip">
+  <svg width="22" height="22" viewBox="0 0 48 48" fill="none"><rect x="4" y="4" width="40" height="40" rx="6" fill="white" stroke="#E0E0E0"/><rect x="4" y="20" width="40" height="5" fill="#4285F4"/><rect x="20" y="4" width="5" height="40" fill="#4285F4"/><circle cx="24" cy="32" r="6" fill="#EA4335"/><rect x="13" y="2" width="5" height="8" rx="2.5" fill="#757575"/><rect x="30" y="2" width="5" height="8" rx="2.5" fill="#757575"/></svg>
+  <div class="gcal-strip-text">Ao salvar um compromisso, você pode enviá-lo direto ao Google Agenda</div>
+</div>
+<button class="btn-ghost" style="width:100%;justify-content:center;margin-bottom:12px" onclick="openModal('event')"><i class="ti ti-calendar-plus"></i> Novo compromisso</button>`;
+
+  if((showE&&mEvents.length)||(showD&&mDelivs.length)){
+    html+=`<div class="card">`;
+    if(showE&&mEvents.length){
+      html+=`<div class="sub-title"><i class="ti ti-calendar-event" style="font-size:13px"></i>Compromissos do mês</div>`;
+      mEvents.forEach(e=>{
+        html+=`<div class="ev-row">
+<div class="ev-bar" style="background:${e.color||'#533AB7'}"></div>
+<div class="ev-info"><div class="ev-title">${e.title}</div>
+<div class="ev-time"><i class="ti ti-calendar" style="font-size:11px;vertical-align:-1px"></i> ${fmtDate(e.date)}${e.timeStart?'&nbsp;&nbsp;<i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> '+e.timeStart+(e.timeEnd?' – '+e.timeEnd:''):''}</div>
+${e.desc?`<div class="ev-desc">${e.desc}</div>`:''}</div>
+<div style="display:flex;gap:2px;flex-shrink:0">
+<a class="icon-btn" href="${gcalLink(e)}" target="_blank"><i class="ti ti-brand-google" style="color:#4285F4;font-size:17px"></i></a>
+<button class="icon-btn" onclick="doDeleteEvent('${e.id}')"><i class="ti ti-trash"></i></button>
+</div></div>`;
+      });
+    }
+    if(showD&&mDelivs.length){
+      html+=`<div class="sub-title" style="margin-top:${showE&&mEvents.length?'10px':'0'}"><i class="ti ti-checklist" style="font-size:13px"></i>Entregas do mês</div>`;
+      mDelivs.forEach(d=>{
+        const p=projects.find(x=>x.id===d.projectId);
+        html+=`<div class="row"><div class="dot" style="background:${dotColor(d.status,d.dateExp)}"></div>
+<div class="row-info"><div class="row-name">${d.name}</div>
+<div class="row-meta">${p?p.name+' · ':''}${fmtDate(d.dateExp)}</div></div>
+${statusBadge(d.status,d.dateExp)}</div>`;
+      });
+    }
+    html+=`</div>`;
+  } else {
+    html+=`<div class="empty"><i class="ti ti-calendar-off"></i><p>Nenhum item neste mês</p></div>`;
+  }
+  return html;
+}
+
+// ── Modal dia ────────────────────────────────────────────
+window.showDay = function(key){
+  const evs=events.filter(e=>e.date===key).sort((a,b)=>(a.timeStart||'').localeCompare(b.timeStart||''));
+  const devs=deliveries.filter(d=>d.dateExp===key);
+  if(!evs.length&&!devs.length)return;
+  const[y,mo,d]=key.split('-');
+  let body='';
+  if(evs.length){
+    body+=`<div class="sub-title"><i class="ti ti-calendar-event" style="font-size:13px"></i>Compromissos</div>`;
+    evs.forEach(e=>{ body+=`<div class="ev-row"><div class="ev-bar" style="background:${e.color||'#533AB7'}"></div>
+<div class="ev-info"><div class="ev-title">${e.title}</div>
+<div class="ev-time">${e.timeStart?e.timeStart+(e.timeEnd?' – '+e.timeEnd:''):''}</div>
+${e.desc?`<div class="ev-desc">${e.desc}</div>`:''}</div>
+<a class="icon-btn" href="${gcalLink(e)}" target="_blank"><i class="ti ti-brand-google" style="color:#4285F4;font-size:17px"></i></a></div>`; });
+  }
+  if(devs.length){
+    body+=`<div class="sub-title" style="margin-top:${evs.length?'10px':'0'}"><i class="ti ti-checklist" style="font-size:13px"></i>Entregas</div>`;
+    devs.forEach(d=>{ body+=`<div class="row"><div class="dot" style="background:${dotColor(d.status,d.dateExp)}"></div>
+<div class="row-info"><div class="row-name">${d.name}</div></div>
+${statusBadge(d.status,d.dateExp)}</div>`; });
+  }
+  openCustomModal(`${d}/${mo}/${y}`,body);
+};
+
+function openCustomModal(title,body){
+  document.getElementById('modal').innerHTML=`<div class="modal-handle"></div><div class="modal-title">${title}<button class="icon-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>${body}`;
+  document.getElementById('overlay').classList.add('open');
+}
+
+window.closeModal  = ()=>document.getElementById('overlay').classList.remove('open');
+window.prevMonth   = ()=>{calDate=new Date(calDate.getFullYear(),calDate.getMonth()-1,1);render()};
+window.nextMonth   = ()=>{calDate=new Date(calDate.getFullYear(),calDate.getMonth()+1,1);render()};
+window.setCalFilter= f=>{calFilter=f;render()};
+
+// ── Abrir modais ─────────────────────────────────────────
+window.openModal = function(type){
+  const projOpts=projects.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  let body='<div class="modal-handle"></div>';
+
+  if(type==='project'){
+    body+=`<div class="modal-title">Novo projeto <button class="icon-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+<label>Nome do projeto</label><input id="f-pname" placeholder="Ex: RH em Movimento">
+<label>Cliente</label><input id="f-pclient" placeholder="Nome do cliente">
+<label>Descrição</label><textarea id="f-pdesc" placeholder="Contexto, objetivo..."></textarea>
+<button class="btn-primary" style="width:100%;justify-content:center" onclick="doSaveProject()"><i class="ti ti-check"></i> Salvar projeto</button>`;
+
+  } else if(type==='delivery'){
+    body+=`<div class="modal-title">Nova entrega <button class="icon-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+<label>Nome da entrega</label><input id="f-dname" placeholder="Ex: Dashboard de indicadores">
+<label>Descrição</label><textarea id="f-ddesc" placeholder="O que inclui..."></textarea>
+<label>Projeto</label><select id="f-dproj"><option value="">— Selecionar projeto —</option>${projOpts}</select>
+<div class="two-col"><div><label>Data prevista</label><input type="date" id="f-dexp"></div><div><label>Data real</label><input type="date" id="f-dreal"></div></div>
+<label>Status</label><select id="f-dstatus"><option value="pending">Pendente</option><option value="progress">Em andamento</option><option value="done">Concluída</option></select>
+<label>Link / arquivo</label><input id="f-dlink" placeholder="https://...">
+<button class="btn-primary" style="width:100%;justify-content:center" onclick="doSaveDelivery()"><i class="ti ti-check"></i> Salvar entrega</button>`;
+
+  } else if(type==='event'){
+    selColor='#533AB7';
+    body+=`<div class="modal-title">Novo compromisso <button class="icon-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+<label>Título</label><input id="f-etitle" placeholder="Ex: Reunião com cliente">
+<label>Data</label><input type="date" id="f-edate">
+<div class="two-col"><div><label>Hora início</label><input type="time" id="f-estart"></div><div><label>Hora fim</label><input type="time" id="f-eend"></div></div>
+<label>Local / descrição</label><textarea id="f-edesc" placeholder="Endereço, observações..." style="min-height:52px"></textarea>
+<label>Cor</label>
+<div class="color-pick" id="cpick">${COLORS.map(c=>`<div class="color-opt${c===selColor?' sel':''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('')}</div>
+<button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:8px" onclick="doSaveEvent(false)"><i class="ti ti-check"></i> Salvar compromisso</button>
+<div class="btn-google" onclick="doSaveEvent(true)">
+  <svg width="16" height="16" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="5" fill="white" stroke="#dadce0"/><rect x="4" y="20" width="40" height="5" fill="#4285F4"/><rect x="20" y="4" width="5" height="40" fill="#4285F4"/><circle cx="24" cy="32" r="5" fill="#EA4335"/></svg>
+  Salvar e abrir no Google Agenda
+</div>`;
+  }
+
+  document.getElementById('modal').innerHTML=body;
+  document.getElementById('overlay').classList.add('open');
+};
+
+window.pickColor = function(c){
+  selColor=c;
+  document.querySelectorAll('.color-opt').forEach(el=>{
+    el.classList.toggle('sel', el.style.background===c||el.style.backgroundColor===c);
+  });
+};
+
+// ── Operações Firebase ───────────────────────────────────
+window.doSaveProject = async function(){
+  const name=document.getElementById('f-pname').value.trim();
+  if(!name){ alert('Informe o nome'); return; }
+  await addDoc(collection(db,'projects'),{name,client:document.getElementById('f-pclient').value.trim(),desc:document.getElementById('f-pdesc').value.trim(),createdAt:serverTimestamp()});
+  closeModal(); toast('Projeto salvo ✓');
+};
+
+window.doSaveDelivery = async function(){
+  const name=document.getElementById('f-dname').value.trim();
+  if(!name){ alert('Informe o nome da entrega'); return; }
+  await addDoc(collection(db,'deliveries'),{name,desc:document.getElementById('f-ddesc').value.trim(),projectId:document.getElementById('f-dproj').value,dateExp:document.getElementById('f-dexp').value,dateReal:document.getElementById('f-dreal').value,status:document.getElementById('f-dstatus').value,link:document.getElementById('f-dlink').value.trim(),createdAt:serverTimestamp()});
+  closeModal(); toast('Entrega salva ✓');
+};
+
+window.doSaveEvent = async function(openGcal){
+  const title=document.getElementById('f-etitle').value.trim();
+  if(!title){ alert('Informe o título'); return; }
+  const ev={title,date:document.getElementById('f-edate').value,timeStart:document.getElementById('f-estart').value,timeEnd:document.getElementById('f-eend').value,desc:document.getElementById('f-edesc').value.trim(),color:selColor,createdAt:serverTimestamp()};
+  const ref=await addDoc(collection(db,'events'),ev);
+  closeModal(); toast('Compromisso salvo ✓');
+  if(openGcal) setTimeout(()=>window.open(gcalLink({...ev,id:ref.id}),'_blank'),200);
+};
+
+window.doDeleteProject = async function(id){
+  if(!confirm('Excluir este projeto?')) return;
+  await deleteDoc(doc(db,'projects',id));
+  const dels=deliveries.filter(d=>d.projectId===id).map(d=>deleteDoc(doc(db,'deliveries',d.id)));
+  await Promise.all(dels);
+  toast('Projeto excluído');
+};
+
+window.doDeleteDelivery = async function(id){
+  if(!confirm('Excluir esta entrega?')) return;
+  await deleteDoc(doc(db,'deliveries',id));
+  toast('Entrega excluída');
+};
+
+window.doDeleteEvent = async function(id){
+  if(!confirm('Excluir este compromisso?')) return;
+  await deleteDoc(doc(db,'events',id));
+  toast('Compromisso excluído');
+};
+
+window.doCycleStatus = async function(id,current){
+  const c=['pending','progress','done'];
+  const next=c[(c.indexOf(current)+1)%c.length];
+  await updateDoc(doc(db,'deliveries',id),{status:next});
+};
+
+// ── Render ───────────────────────────────────────────────
+window.render = function(){
+  const el=document.getElementById('content');
+  if(!el)return;
+  const map={home:renderHome,projects:renderProjects,deliveries:renderDeliveries,calendar:renderCalendar};
+  el.innerHTML=map[tab]();
+};
+
+// ── Eventos UI ───────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    tab=t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    render();
+  });
+});
+
+document.getElementById('fab').addEventListener('click',()=>{
+  const map={projects:'project',deliveries:'delivery',home:'delivery',calendar:'event'};
+  openModal(map[tab]||'delivery');
+});
+
+document.getElementById('overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('overlay')) closeModal();
+});
+
+// ── Start ────────────────────────────────────────────────
+startListeners();
+
+</script>
+</body>
+</html>
