@@ -287,21 +287,29 @@ ${statusBadge(d.status,d.dateExp)}</div>`;}).join('')}</div>`;
 function renderProjects(){
   let html=`<button class="btn-ghost" style="width:100%;justify-content:center;margin-bottom:12px" onclick="openModal('project')"><i class="ti ti-plus"></i> Novo projeto</button>`;
   if(!projects.length) return html+`<div class="empty"><i class="ti ti-folder-open"></i><p>Nenhum projeto criado</p></div>`;
-  html+=`<div class="card">`;
   projects.forEach(p=>{
     const dc=deliveries.filter(d=>d.projectId===p.id).length;
     const dd=deliveries.filter(d=>d.projectId===p.id&&d.status==='done').length;
-    html+=`<div class="row" style="align-items:center">
-<div class="row-info">
-  <div class="row-name">${p.name}</div>
-  ${p.client?`<div class="row-meta">${p.client}</div>`:''}
-  ${p.desc?`<div class="row-meta" style="margin-top:2px">${p.desc}</div>`:''}
-  <div class="row-tags"><span class="badge badge-progress"><i class="ti ti-checklist" style="font-size:10px"></i>${dd}/${dc} entregas</span></div>
+    html+=`<div class="card" style="margin-bottom:10px;padding:14px 16px">
+<div style="display:flex;align-items:flex-start;gap:10px">
+  <div style="flex:1;min-width:0">
+    <div style="font-size:15px;font-weight:600">${p.name}</div>
+    ${p.client?`<div style="font-size:13px;color:var(--text2);margin-top:2px">${p.client}</div>`:''}
+    ${p.desc?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${p.desc}</div>`:''}
+    <div style="margin-top:8px"><span class="badge badge-progress"><i class="ti ti-checklist" style="font-size:10px"></i>${dd}/${dc} entregas</span></div>
+  </div>
 </div>
-<button class="icon-btn" onclick="doDeleteProject('${p.id}')"><i class="ti ti-trash"></i></button>
+<div style="display:flex;gap:8px;margin-top:12px;border-top:0.5px solid var(--border);padding-top:10px">
+  <button class="btn-ghost" style="flex:1;justify-content:center;padding:7px;font-size:12px" onclick="openEditProject('${p.id}')">
+    <i class="ti ti-edit" style="font-size:15px"></i> Editar
+  </button>
+  <button style="flex:1;justify-content:center;padding:7px;font-size:12px;background:var(--cdl);color:var(--cdt);border:0.5px solid var(--cd);border-radius:var(--radius);font-family:'Inter',sans-serif;font-weight:500;display:inline-flex;align-items:center;gap:6px;cursor:pointer" onclick="doDeleteProject('${p.id}')">
+    <i class="ti ti-trash" style="font-size:15px"></i> Excluir
+  </button>
+</div>
 </div>`;
   });
-  return html+'</div>';
+  return html;
 }
 
 function renderDeliveries(){
@@ -510,8 +518,27 @@ window.doSaveEvent = async function(openGcal){
   if(openGcal) setTimeout(()=>window.open(gcalLink({...ev,id:ref.id}),'_blank'),200);
 };
 
+window.openEditProject = function(id){
+  const p=projects.find(x=>x.id===id);
+  if(!p)return;
+  document.getElementById('modal').innerHTML=`<div class="modal-handle"></div>
+<div class="modal-title">Editar projeto <button class="icon-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+<label>Nome do projeto</label><input id="f-pname" value="${p.name||''}">
+<label>Cliente</label><input id="f-pclient" value="${p.client||''}">
+<label>Descrição</label><textarea id="f-pdesc">${p.desc||''}</textarea>
+<button class="btn-primary" style="width:100%;justify-content:center" onclick="doUpdateProject('${id}')"><i class="ti ti-check"></i> Salvar alterações</button>`;
+  document.getElementById('overlay').classList.add('open');
+};
+
+window.doUpdateProject = async function(id){
+  const name=document.getElementById('f-pname').value.trim();
+  if(!name){ alert('Informe o nome'); return; }
+  await updateDoc(doc(db,'projects',id),{name,client:document.getElementById('f-pclient').value.trim(),desc:document.getElementById('f-pdesc').value.trim()});
+  closeModal(); toast('Projeto atualizado ✓');
+};
+
 window.doDeleteProject = async function(id){
-  if(!confirm('Excluir este projeto?')) return;
+  if(!confirm('Excluir este projeto? As entregas vinculadas também serão excluídas.')) return;
   await deleteDoc(doc(db,'projects',id));
   const dels=deliveries.filter(d=>d.projectId===id).map(d=>deleteDoc(doc(db,'deliveries',d.id)));
   await Promise.all(dels);
